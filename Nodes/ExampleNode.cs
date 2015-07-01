@@ -1,22 +1,24 @@
 ﻿
 using UnityEngine;
-using UnityEditor;
-using System.Collections;
 
 [System.Serializable]
-public class ExampleNode : Node 
+public class ExampleNode : Node
 {
-	public const string ID = "exampleNode";
-	public override string GetID { get { return ID; } }
+    public const string ID = "exampleNode";
+    public override string GetID { get { return ID; } }
 
-	public static ExampleNode Create (Rect NodeRect) 
-	{}
+    public static ExampleNode Create(Rect NodeRect)
+    {
+        return null;
+    }
 
-	public override void NodeGUI () 
-	{}
+    public override void NodeGUI()
+    { }
 
-	public override bool Calculate () 
-	{}
+    public override bool Calculate()
+    {
+        return false;
+    }
 }
 
 

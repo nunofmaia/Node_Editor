@@ -30,7 +30,7 @@ public class Node_Editor : EditorWindow
 	public static Node_Canvas_Object nodeCanvas;
 	public static Node_Editor editor;
 
-	public const string editorPath = "Assets/Plugins/Node_Editor/Editor/";
+	public const string editorPath = "Assets/Plugins/Node_Editor/";
 	public static string openedCanvas = "New Canvas";
 	public static string openedCanvasPath;
 
@@ -327,7 +327,7 @@ public class Node_Editor : EditorWindow
 	/// </summary>
 	public static Texture2D Tint (Texture2D tex, Color color) 
 	{
-		Texture2D tintedTex = Instantiate (tex);
+		Texture2D tintedTex = Instantiate (tex) as Texture2D;
 		
 		for (int x = 0; x < tex.width; x++) 
 			for (int y = 0; y < tex.height; y++) 
