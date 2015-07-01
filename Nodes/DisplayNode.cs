@@ -5,13 +5,17 @@ public class DisplayNode : Node
 {
 	public const string ID = "displayNode";
 	public override string GetID { get { return ID; } }
+	
+	public const int width = 150;
+	public const int height = 50;
 
 	public bool assigned = false;
 	public float value = 0;
 
-	public static DisplayNode Create (Rect NodeRect) 
-	{ // This function has to be registered in Node_Editor.ContextCallback
+	public static DisplayNode Create (Vector2 position) 
+	{
 		DisplayNode node = CreateInstance <DisplayNode> ();
+		Rect NodeRect = new Rect(position.x, position.y, width, height);
 		
 		node.name = "Display Node";
 		node.rect = NodeRect;

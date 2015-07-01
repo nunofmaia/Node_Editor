@@ -2,6 +2,8 @@
 using UnityEditor;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
 
 using Object = UnityEngine.Object;
 
@@ -23,6 +25,25 @@ public struct TypeData
 
 public class Node_Editor : EditorWindow 
 {
+	public static class ReflectiveEnumerator
+    {
+        static ReflectiveEnumerator()
+        {
+        }
+
+        public static IEnumerable<Type> GetEnumerableOfType<T>(params object[] args) where T : class
+        {
+            List<Type> objects = new List<Type>();
+            foreach (Type type in
+                     Assembly.GetAssembly(typeof(T)).GetTypes()
+                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
+            {
+                objects.Add(type);
+            }
+
+            return objects;
+        }
+    }
 	// Information about current instances
 	public static Node_Canvas_Object nodeCanvas;
 	public static Node_Editor editor;
@@ -257,47 +278,46 @@ public class Node_Editor : EditorWindow
 	#region GUI Functions
 	
 	/// <summary>
-	/// Context Click selection. Here you'll need to register your own using a string identifier
-	/// </summary>
-	public void ContextCallback (object obj)
+    /// Context Click selection for node creation.
+	/// Creates the node depending on their type, invoking the 'Create' method.
+    /// </summary>
+	public void CreateNodeCallback(object obj)
 	{
-		// TODO: Node Editor: Custom Node Regristration here!
-		switch (obj.ToString ()) 
+		string callback = obj.ToString();
+		Type type = Type.GetType(callback);
+		MethodInfo mthd = type.GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+		if (mthd != null)
 		{
-		case CalcNode.ID:
-			CalcNode.Create (new Rect (mousePos.x - zoomPos.x, mousePos.y - zoomPos.y, 200, 100));
-			break;
-			
-		case InputNode.ID:
-			InputNode.Create (new Rect (mousePos.x - zoomPos.x, mousePos.y - zoomPos.y, 200, 50));
-			break;
-			
-		case DisplayNode.ID:
-			DisplayNode.Create (new Rect (mousePos.x - zoomPos.x, mousePos.y - zoomPos.y, 150, 50));
-			break;
-
-//		case ExampleNode.ID:
-//			ExampleNode.Create (new Rect (mousePos.x - zoomPos.x, mousePos.y - zoomPos.y, 100, 50));
-//			break;
-			
-		case "deleteNode":
-			Node nodeToDelete = NodeAtPosition (mousePos);
-			if (nodeToDelete != null) 
-				nodeToDelete.Delete ();
-			break;
-
-		case "duplicateNode":
-			Node nodeToDuplicate = NodeAtPosition (mousePos);
-			if (nodeToDuplicate != null) 
-			{
-				ContextCallback (nodeToDuplicate.GetID);
-				Node duplicatedNode = nodeCanvas.nodes [nodeCanvas.nodes.Count-1];
-				activeNode = duplicatedNode;
-				dragNode = true;
-			}
-			break;
+			mthd.Invoke(null, new object[] { new Vector2(mousePos.x - zoomPos.x, mousePos.y - zoomPos.y) });
 		}
 	}
+
+    /// <summary>
+    /// Context Click selection. Here you'll need to register your own using a string identifier
+    /// </summary>
+    public void ContextCallback(object obj)
+    {
+        // TODO: Node Editor: Custom Node Regristration here!
+        switch (obj.ToString())
+        {
+            case "deleteNode":
+                Node nodeToDelete = NodeAtPosition(mousePos);
+                if (nodeToDelete != null)
+                    nodeToDelete.Delete();
+                break;
+
+            case "duplicateNode":
+                Node nodeToDuplicate = NodeAtPosition(mousePos);
+                if (nodeToDuplicate != null)
+                {
+                    CreateNodeCallback(nodeToDuplicate.GetType().Name);
+                    Node duplicatedNode = nodeCanvas.nodes[nodeCanvas.nodes.Count - 1];
+                    activeNode = duplicatedNode;
+                    dragNode = true;
+                }
+                break;
+        }
+    }
 	
 	public Rect sideWindowRect 
 	{
@@ -479,10 +499,15 @@ public class Node_Editor : EditorWindow
 				{ // Right click -> Editor Context Click
 					GenericMenu menu = new GenericMenu ();
 					
-					menu.AddItem (new GUIContent ("Add Input Node"), false, ContextCallback, InputNode.ID);
-					menu.AddItem (new GUIContent ("Add Display Node"), false, ContextCallback, DisplayNode.ID);
-					menu.AddItem (new GUIContent ("Add Calculation Node"), false, ContextCallback, CalcNode.ID);
-					menu.AddSeparator ("");
+					//  menu.AddItem (new GUIContent ("Add Input Node"), false, ContextCallback, InputNode.ID);
+					//  menu.AddItem (new GUIContent ("Add Display Node"), false, ContextCallback, DisplayNode.ID);
+					//  menu.AddItem (new GUIContent ("Add Calculation Node"), false, ContextCallback, CalcNode.ID);
+					//  menu.AddSeparator ("");
+					
+					foreach (var type in ReflectiveEnumerator.GetEnumerableOfType<Node>())
+					{
+						menu.AddItem(new GUIContent(type.ToString()), false, CreateNodeCallback, type.Name);
+					}
 					
 					//menu.AddItem(new GUIContent("Add Example Node"), false, ContextCallback, "exampleNode");
 					

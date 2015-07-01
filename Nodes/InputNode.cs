@@ -6,12 +6,16 @@ public class InputNode : Node
 {
 	public const string ID = "inputNode";
 	public override string GetID { get { return ID; } }
+	
+	public const int width = 200;
+	public const int height = 50;
 
 	public float value = 1f;
 
-	public static InputNode Create (Rect NodeRect) 
-	{ // This function has to be registered in Node_Editor.ContextCallback
+	public static InputNode Create (Vector2 position) 
+	{
 		InputNode node = CreateInstance <InputNode> ();
+		Rect NodeRect = new Rect(position.x, position.y, width, height);
 		
 		node.name = "Input Node";
 		node.rect = NodeRect;

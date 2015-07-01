@@ -9,14 +9,17 @@ public class CalcNode : Node
 
 	public const string ID = "calcNode";
 	public override string GetID { get { return ID; } }
+	
+	public const int width = 200;
+	public const int height = 100;
 
 	public float Input1Val = 1f;
 	public float Input2Val = 1f;
 
-	public static CalcNode Create (Rect NodeRect) 
-	{ // This function has to be registered in Node_Editor.ContextCallback
+	public static CalcNode Create (Vector2 position) 
+	{
 		CalcNode node = CreateInstance <CalcNode> ();
-		
+		Rect NodeRect = new Rect(position.x, position.y, width, height);
 		node.name = "Calc Node";
 		node.rect = NodeRect;
 		
