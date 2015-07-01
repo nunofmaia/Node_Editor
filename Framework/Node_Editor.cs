@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine.EventSystems;
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 
 using Object = UnityEngine.Object;

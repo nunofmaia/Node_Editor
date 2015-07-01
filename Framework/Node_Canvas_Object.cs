@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Node_Canvas_Object : ScriptableObject 
