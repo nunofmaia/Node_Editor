@@ -233,12 +233,55 @@ public class Node_Editor : EditorWindow
 		GUI.BeginGroup (new Rect (0, 23, position.width, position.height));
 
 		LateEvents ();
+		
+		//Draw toolbar
+		DrawToolbar();
 
 		// Draw Side Window:
 		sideWindowWidth = Math.Min (600, Math.Max (200, (int)(position.width / 5)));
 		GUILayout.BeginArea (sideWindowRect, nodeBox);
 		DrawSideWindow ();
 		GUILayout.EndArea ();
+	}
+	
+	public void DrawToolbar()
+	{
+		EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+		
+		if (GUILayout.Button (new GUIContent ("New", "Creates a new Canvas (remember to save the previous one to a referenced Canvas Asset File at least once before! Else it'll be lost!)"), EditorStyles.toolbarButton)) 
+		{
+			NewNodeCanvas ();
+		}
+		
+		GUILayout.Space(6);
+	
+		if (GUILayout.Button (new GUIContent ("Load", "Loads the canvas from a Canvas Asset File in the Assets Folder"), EditorStyles.toolbarButton)) 
+		{
+			string path = EditorUtility.OpenFilePanel ("Load Node Canvas", editorPath + "Saves/", "asset");
+			if (!path.Contains (Application.dataPath)) 
+			{
+				if (path != String.Empty)
+					ShowNotification (new GUIContent ("You should select an asset inside your project folder!"));
+				return;
+			}
+			path = path.Replace (Application.dataPath, "Assets");
+			LoadNodeCanvas (path);
+		}
+		
+		if (GUILayout.Button (new GUIContent ("Save", "Saves the canvas as a new Canvas Asset File in the Assets Folder"), EditorStyles.toolbarButton)) 
+		{
+			SaveNodeCanvas (EditorUtility.SaveFilePanelInProject ("Save Node Canvas", "Node Canvas", "asset", "Saving to a file is only needed once.", editorPath + "Saves/"));
+		}
+	
+		if (GUILayout.Button (new GUIContent ("Recalculate All", "Starts to calculate from the beginning off."), EditorStyles.toolbarButton)) 
+		{
+			RecalculateAll ();
+		}
+		
+		GUILayout.Space(6);
+		
+		GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
 	}
 	
 	public void DrawSideWindow () 
@@ -325,7 +368,7 @@ public class Node_Editor : EditorWindow
 	}
 	public Rect canvasWindowRect 
 	{
-		get { return new Rect (0, 0, position.width - sideWindowWidth, position.height); }
+		get { return new Rect (0, 20, position.width - sideWindowWidth, position.height); }
 	}
 	
 	/// <summary>
