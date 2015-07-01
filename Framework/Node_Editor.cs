@@ -77,6 +77,8 @@ public class Node_Editor : EditorWindow
 
 	// Static information about Types
 	public static Dictionary<TypeOf, TypeData> typeData;
+	
+	Node activeNodeCopy;
 
 	#region Setup
 
@@ -161,6 +163,9 @@ public class Node_Editor : EditorWindow
 		}
 
 		InputEvents ();
+		
+		//Draw toolbar
+		DrawToolbar();
 
 		// We want to scale our nodes, but as GUI.matrix also scales our widnow's clipping group, 
 		// we have to scale it up first to receive a correct one as a result
@@ -172,7 +177,7 @@ public class Node_Editor : EditorWindow
 		// The Rect of the new clipping group to draw our nodes in
 		Rect CanvasRect = canvasWindowRect;
 		Rect ScaledCanvasRect = ScaleRect (CanvasRect, zoomPos, new Vector2 (nodeCanvas.zoom, nodeCanvas.zoom));
-		ScaledCanvasRect.y += 23; // Header tab height
+		//  ScaledCanvasRect.y += 23; // Header tab height
 
 		// Now continue drawing using the new clipping group
 		GUI.BeginGroup (ScaledCanvasRect);
@@ -230,18 +235,30 @@ public class Node_Editor : EditorWindow
 		// Set default matrix and clipping group for the rest
 		GUI.matrix = GUIMatrix;
 		GUI.EndGroup ();
-		GUI.BeginGroup (new Rect (0, 23, position.width, position.height));
+		GUI.BeginGroup (new Rect (0, 40, position.width, position.height));
 
 		LateEvents ();
-		
-		//Draw toolbar
-		DrawToolbar();
 
 		// Draw Side Window:
 		sideWindowWidth = Math.Min (600, Math.Max (200, (int)(position.width / 5)));
 		GUILayout.BeginArea (sideWindowRect, nodeBox);
-		DrawSideWindow ();
+		//  DrawSideWindow ();
+		//  DrawNodeInfo();
 		GUILayout.EndArea ();
+	}
+	
+	void Update()
+	{
+		activeNodeCopy = activeNode;
+	}
+	
+	public void DrawNodeInfo()
+	{
+		if (activeNodeCopy != null)
+		{
+			GUILayout.Label(activeNodeCopy.name);
+			activeNodeCopy.NodeGUI();
+		}
 	}
 	
 	public void DrawToolbar()
@@ -268,10 +285,14 @@ public class Node_Editor : EditorWindow
 			LoadNodeCanvas (path);
 		}
 		
+		GUILayout.Space(6);
+		
 		if (GUILayout.Button (new GUIContent ("Save", "Saves the canvas as a new Canvas Asset File in the Assets Folder"), EditorStyles.toolbarButton)) 
 		{
 			SaveNodeCanvas (EditorUtility.SaveFilePanelInProject ("Save Node Canvas", "Node Canvas", "asset", "Saving to a file is only needed once.", editorPath + "Saves/"));
 		}
+		
+		GUILayout.Space(6);		
 	
 		if (GUILayout.Button (new GUIContent ("Recalculate All", "Starts to calculate from the beginning off."), EditorStyles.toolbarButton)) 
 		{
@@ -280,6 +301,8 @@ public class Node_Editor : EditorWindow
 		
 		GUILayout.Space(6);
 		
+		nodeCanvas.zoom = GUILayout.HorizontalSlider(nodeCanvas.zoom, 0.6f, 2, GUILayout.Width(100));
+				
 		GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
 	}
