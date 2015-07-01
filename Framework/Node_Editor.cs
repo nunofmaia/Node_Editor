@@ -93,8 +93,8 @@ public class Node_Editor : EditorWindow
 	{
 		if (!initiated || nodeCanvas == null) 
 		{
-			InputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/In_Knob.png", typeof(Texture2D)) as Texture2D;
-			OutputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/Out_Knob.png", typeof(Texture2D)) as Texture2D;
+			InputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/handle.png", typeof(Texture2D)) as Texture2D;
+			OutputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/handle.png", typeof(Texture2D)) as Texture2D;
 			
 			ConnectorKnob = EditorGUIUtility.Load ("icons/animationkeyframe.png") as Texture2D;
 			Background = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/background.png", typeof(Texture2D)) as Texture2D;
@@ -392,11 +392,12 @@ public class Node_Editor : EditorWindow
 		Rect headerRect = new Rect (nodeRect.x, nodeRect.y, nodeRect.width, headerHeight);
 		Rect bodyRect = new Rect (nodeRect.x, nodeRect.y + headerHeight, nodeRect.width, nodeRect.height - headerHeight);
 
-		GUIStyle headerStyle = new GUIStyle (GUI.skin.box);
+		GUIStyle headerStyle = Styles.NodeHeader();
+		GUIStyle bodyStyle = Styles.NodeBody();
 		if (activeNode == node)
-			headerStyle.fontStyle = FontStyle.Bold;
+			headerStyle.normal.textColor = Color.black;
 		GUI.Label (headerRect, new GUIContent (node.name), headerStyle);
-		GUILayout.BeginArea (bodyRect, GUI.skin.box);
+		GUILayout.BeginArea (bodyRect, bodyStyle);
 		node.NodeGUI ();
 		GUILayout.EndArea ();
 	}
@@ -417,11 +418,11 @@ public class Node_Editor : EditorWindow
 		Vector3 endPos = new Vector3 (end.x, end.y);
 		Vector3 startTan = startPos + Vector3.right * 50;
 		Vector3 endTan = endPos + Vector3.left * 50;
-		Color shadowColor = new Color (0, 0, 0, 0.1f);
-		
-		for (int i = 0; i < 3; i++) // Draw a shadow with 3 shades
-			Handles.DrawBezier (startPos, endPos, startTan, endTan, shadowColor, null, (i + 1) * 5); // increasing width for fading shadow
-		Handles.DrawBezier(startPos, endPos, startTan, endTan, col * Color.gray, null, 3);
+		//  Color shadowColor = new Color (0, 0, 0, 0.1f);
+		//  
+		//  for (int i = 0; i < 3; i++) // Draw a shadow with 3 shades
+		//  	Handles.DrawBezier (startPos, endPos, startTan, endTan, shadowColor, null, (i + 1) * 5); // increasing width for fading shadow
+		Handles.DrawBezier(startPos, endPos, startTan, endTan, col * Color.gray, null, 5);
 	}
 	
 	#endregion

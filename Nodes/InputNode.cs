@@ -7,7 +7,7 @@ public class InputNode : Node
 	public const string ID = "inputNode";
 	public override string GetID { get { return ID; } }
 	
-	public const int width = 200;
+	public const int width = 220;
 	public const int height = 50;
 
 	public float value = 1f;
