@@ -70,6 +70,16 @@ public abstract class Node : ScriptableObject
 		output.Notify();
 	}
 	
+	public NodeInput InputPort(string name)
+	{
+		return Inputs.Find(i => i.name.Equals(name));
+	}
+	
+	public NodeOutput OutputPort(string name)
+	{
+		return Outputs.Find(o => o.name.Equals(name));
+	}
+	
 	/// <summary>
 	/// Optional callback when the node is deleted
 	/// </summary>
@@ -82,11 +92,11 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public bool allInputsReady () 
 	{
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{
 			//  if (Inputs [inCnt].connection == null || Inputs [inCnt].connection.value == null)
 			//  	return false;
-			if (!Inputs[inCnt].hasResult)
+			if (!input.hasResult)
 			{
 				return false;
 			}
@@ -98,9 +108,9 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public bool hasNullInputs () 
 	{
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{
-			if (Inputs [inCnt].connection == null)
+			if (input.connection == null)
 				return true;
 		}
 		return false;
@@ -110,9 +120,9 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public bool hasNullInputValues () 
 	{
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{
-			if (Inputs [inCnt].connection != null && Inputs [inCnt].connection.value == null)
+			if (input.connection != null && input.connection.value == null)
 				return true;
 		}
 		return false;
@@ -125,13 +135,13 @@ public abstract class Node : ScriptableObject
 	{
 		if (otherNode == null)
 			return false;
-		for (int cnt = 0; cnt < Inputs.Count; cnt++) 
+		foreach (var input in Inputs) 
 		{
-			if (Inputs [cnt].connection != null) 
+			if (input.connection != null) 
 			{
-				if (Inputs [cnt].connection.body == otherNode)
+				if (input.connection.body == otherNode)
 					return true;
-				else if (Inputs [cnt].connection.body.isChildOf (otherNode)) // Recursively searching
+				else if (input.connection.body.isChildOf (otherNode)) // Recursively searching
 					return true;
 			}
 		}
@@ -148,10 +158,15 @@ public abstract class Node : ScriptableObject
 		if (!String.IsNullOrEmpty (AssetDatabase.GetAssetPath (Node_Editor.nodeCanvas)))
 		{
 			AssetDatabase.AddObjectToAsset (this, Node_Editor.nodeCanvas);
-			for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
-				AssetDatabase.AddObjectToAsset (Inputs [inCnt], this);
-			for (int outCnt = 0; outCnt < Outputs.Count; outCnt++) 
-				AssetDatabase.AddObjectToAsset (Outputs [outCnt], this);
+			foreach (var input in Inputs)
+			{ 
+				AssetDatabase.AddObjectToAsset (input, this);
+			}
+			
+			foreach (var output in Outputs)
+			{ 
+				AssetDatabase.AddObjectToAsset (output, this);
+			}
 			
 			AssetDatabase.ImportAsset (Node_Editor.openedCanvasPath);
 			AssetDatabase.Refresh ();
@@ -163,10 +178,10 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public NodeInput GetInputAtPos (Vector2 pos) 
 	{
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{ // Search for an input at the position
-			if (Inputs [inCnt].GetScreenKnob ().Contains (new Vector3 (pos.x, pos.y)))
-				return Inputs [inCnt];
+			if (input.GetScreenKnob ().Contains (new Vector3 (pos.x, pos.y)))
+				return input;
 		}
 		return null;
 	}
@@ -175,10 +190,10 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public NodeOutput GetOutputAtPos (Vector2 pos) 
 	{
-		for (int outCnt = 0; outCnt < Outputs.Count; outCnt++) 
+		foreach (var output in Outputs) 
 		{ // Search for an output at the position
-			if (Outputs [outCnt].GetScreenKnob ().Contains (new Vector3 (pos.x, pos.y)))
-				return Outputs [outCnt];
+			if (output.GetScreenKnob ().Contains (new Vector3 (pos.x, pos.y)))
+				return output;
 		}
 		return null;
 	}
@@ -188,13 +203,13 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public void DrawKnobs () 
 	{
-		for (int outCnt = 0; outCnt < Outputs.Count; outCnt++) 
+		foreach (var output in Outputs) 
 		{
-			GUI.DrawTexture (Outputs [outCnt].GetGUIKnob (), Node_Editor.typeData [Outputs [outCnt].type].OutputKnob);
+			GUI.DrawTexture (output.GetGUIKnob (), Node_Editor.typeData [output.type].OutputKnob);
 		}
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{
-			GUI.DrawTexture (Inputs [inCnt].GetGUIKnob (), Node_Editor.typeData [Inputs [inCnt].type].InputKnob);
+			GUI.DrawTexture (input.GetGUIKnob (), Node_Editor.typeData [input.type].InputKnob);
 		}
 	}
 	/// <summary>
@@ -202,9 +217,8 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public void DrawConnections () 
 	{
-		for (int outCnt = 0; outCnt < Outputs.Count; outCnt++) 
+		foreach (var output in Outputs) 
 		{
-			NodeOutput output = Outputs [outCnt];
 			for (int conCnt = 0; conCnt < output.connections.Count; conCnt++) 
 			{
 				Node_Editor.DrawNodeCurve (output.GetGUIKnob ().center, 
@@ -220,15 +234,13 @@ public abstract class Node : ScriptableObject
 	public void Delete () 
 	{
 		Node_Editor.nodeCanvas.nodes.Remove (this);
-		for (int outCnt = 0; outCnt < Outputs.Count; outCnt++) 
+		foreach (var output in Outputs) 
 		{
-			NodeOutput output = Outputs [outCnt];
 			for (int conCnt = 0; conCnt < output.connections.Count; conCnt++) 
-				output.connections [outCnt].connection = null;
+				output.connections [conCnt].connection = null;
 		}
-		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
+		foreach (var input in Inputs) 
 		{
-			NodeInput input = Inputs [inCnt];
 			if (input.connection != null)
 				input.connection.connections.Remove (input);
 		}

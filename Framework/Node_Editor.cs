@@ -749,9 +749,8 @@ public class Node_Editor : EditorWindow
 	{
 		if (descendantsCalculated (node) && node.Calculate ())
 		{ // finished Calculating, continue with the children
-			for (int outCnt = 0; outCnt < node.Outputs.Count; outCnt++)
+			foreach (var output in node.Outputs)
 			{
-				NodeOutput output = node.Outputs [outCnt];
 				for (int conCnt = 0; conCnt < output.connections.Count; conCnt++)
 					ContinueCalculation (output.connections [conCnt].body);
 			}
@@ -775,9 +774,8 @@ public class Node_Editor : EditorWindow
 	private void ClearCalculation (Node node) 
 	{
 		node.calculated = false;
-		for (int outCnt = 0; outCnt < node.Outputs.Count; outCnt++)
+		foreach (var output in node.Outputs)
 		{
-			NodeOutput output = node.Outputs [outCnt];
 			output.value = null;
 			for (int conCnt = 0; conCnt < output.connections.Count; conCnt++)
 				ClearCalculation (output.connections [conCnt].body);
@@ -789,9 +787,9 @@ public class Node_Editor : EditorWindow
 	/// </summary>
 	public bool descendantsCalculated (Node node) 
 	{
-		for (int cnt = 0; cnt < node.Inputs.Count; cnt++) 
+		foreach (var input in node.Inputs) 
 		{
-			if (node.Inputs [cnt].connection != null && !node.Inputs [cnt].connection.body.calculated)
+			if (input.connection != null && !input.connection.body.calculated)
 				return false;
 		}
 		return true;
@@ -824,10 +822,15 @@ public class Node_Editor : EditorWindow
 			// Results in a big mess but there's no other way
 			Node node = nodeCanvas.nodes [nodeCnt];
 			AssetDatabase.AddObjectToAsset (node, nodeCanvas);
-			for (int inCnt = 0; inCnt < node.Inputs.Count; inCnt++) 
-				AssetDatabase.AddObjectToAsset (node.Inputs [inCnt], node);
-			for (int outCnt = 0; outCnt < node.Outputs.Count; outCnt++) 
-				AssetDatabase.AddObjectToAsset (node.Outputs [outCnt], node);
+			foreach (var input in node.Inputs)
+			{ 
+				AssetDatabase.AddObjectToAsset (input, node);
+			}
+			
+			foreach (var output in node.Outputs)
+			{ 
+				AssetDatabase.AddObjectToAsset (output, node);
+			}
 		}
 		AssetDatabase.SaveAssets ();
 		AssetDatabase.Refresh ();

@@ -58,8 +58,8 @@ public class CalcNode : Node
         //  	Input2Val = (float)Inputs [1].connection.value;
         if (allInputsReady())
         {
-			Input1Val = (float)Receive(Inputs[0]);
-			Input2Val = (float)Receive(Inputs[1]);
+			Input1Val = (float)Receive(InputPort("x"));
+			Input2Val = (float)Receive(InputPort("y"));
 			
             switch (type)
             {

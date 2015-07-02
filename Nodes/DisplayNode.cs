@@ -43,9 +43,9 @@ public class DisplayNode : Node
 //  		value = (float)Inputs [0].connection.value;
 //  		assigned = true;
 
-		if (Inputs[0].hasResult)
+		if (InputPort("in").hasResult)
 		{
-			float v = (float)Receive(Inputs[0]);
+			float v = (float)Receive(InputPort("in"));
 			Debug.Log("The received value was: " + v);
 		}
 

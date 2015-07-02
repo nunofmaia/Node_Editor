@@ -43,7 +43,7 @@ public class InputNode : Node
 		if (Input.GetKeyDown(KeyCode.A))
 		{
 			//  Outputs [0].value = value;
-			Send(value, Outputs[0]);						
+			Send(value, OutputPort("out"));						
 		}
 		return true;
 	}
