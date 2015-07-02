@@ -30,6 +30,8 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public abstract void NodeGUI ();
 	
+	public virtual void SideGUI() { }
+	
 	/// <summary>
 	/// Function implemented by the children to calculate their outputs
 	/// Should return Success/Fail

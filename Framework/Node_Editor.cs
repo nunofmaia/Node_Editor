@@ -78,7 +78,7 @@ public class Node_Editor : EditorWindow
 	// Static information about Types
 	public static Dictionary<TypeOf, TypeData> typeData;
 	
-	Node activeNodeCopy;
+	Node infoNode;
 
 	#region Setup
 
@@ -243,21 +243,26 @@ public class Node_Editor : EditorWindow
 		sideWindowWidth = Math.Min (600, Math.Max (200, (int)(position.width / 5)));
 		GUILayout.BeginArea (sideWindowRect, nodeBox);
 		//  DrawSideWindow ();
-		//  DrawNodeInfo();
+		DrawNodeInfo();
 		GUILayout.EndArea ();
 	}
 	
 	void Update()
 	{
-		activeNodeCopy = activeNode;
+		infoNode = activeNode;
+	}
+	
+	void OnDestroy()
+	{
+		activeNode = null; 
 	}
 	
 	public void DrawNodeInfo()
 	{
-		if (activeNodeCopy != null)
+		if (infoNode != null)
 		{
-			GUILayout.Label(activeNodeCopy.name);
-			activeNodeCopy.NodeGUI();
+			GUILayout.Label(infoNode.name);
+			infoNode.SideGUI();
 		}
 	}
 	
@@ -505,14 +510,20 @@ public class Node_Editor : EditorWindow
 		
 		Node clickedNode = null;
 		if (e.type == EventType.MouseDown || e.type == EventType.MouseUp)
-			clickedNode = NodeAtPosition (e.mousePosition);
+		{
+			clickedNode = NodeAtPosition (e.mousePosition);				
+		}
 
 		switch (e.type) 
 		{
 		case EventType.MouseDown:
 
 			if (e.button == 0)
-				activeNode = clickedNode;
+			{
+				// Only update the active node when clicking on the canvas
+				if (canvasWindowRect.Contains(e.mousePosition))
+					activeNode = clickedNode;
+			}
 
 			connectOutput = null;
 			dragNode = false;

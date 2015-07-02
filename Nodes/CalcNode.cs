@@ -65,6 +65,24 @@ public class CalcNode : Node
 		if (GUI.changed)
 			Node_Editor.editor.RecalculateFrom (this);
 	}
+	
+	public override void SideGUI()
+	{
+		if (Inputs [0].connection != null)
+			GUILayout.Label (Inputs [0].name);
+		else
+			Input1Val = EditorGUILayout.FloatField (Input1Val);
+		// --
+		if (Inputs [1].connection != null)
+			GUILayout.Label (Inputs [1].name);
+		else
+			Input2Val = EditorGUILayout.FloatField (Input2Val);
+
+		type = (CalcType)EditorGUILayout.EnumPopup (new GUIContent ("Calculation Type", "The type of calculation performed on Input 1 and Input 2"), type);
+
+		if (GUI.changed)
+			Node_Editor.editor.RecalculateFrom (this);
+	}
 
 	public override bool Calculate () 
 	{

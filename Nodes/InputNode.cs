@@ -36,6 +36,13 @@ public class InputNode : Node
 			Node_Editor.editor.RecalculateFrom (this);
 	}
 	
+	public override void SideGUI()
+	{
+		value = EditorGUILayout.FloatField (new GUIContent ("Value", "The input value of type float"), value);
+		if (GUI.changed)
+			Node_Editor.editor.RecalculateFrom (this);
+	}
+	
 	public override bool Calculate () 
 	{
 		Outputs [0].value = value;
