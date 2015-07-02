@@ -301,7 +301,7 @@ public class Node_Editor : EditorWindow
 	
 		if (GUILayout.Button (new GUIContent ("Recalculate All", "Starts to calculate from the beginning off."), EditorStyles.toolbarButton)) 
 		{
-			RecalculateAll ();
+			//  RecalculateAll ();
 		}
 		
 		GUILayout.Space(6);
@@ -338,7 +338,7 @@ public class Node_Editor : EditorWindow
 		}
 		if (GUILayout.Button (new GUIContent ("Recalculate All", "Starts to calculate from the beginning off."))) 
 		{
-			RecalculateAll ();
+			//  RecalculateAll ();
 		}
 		knobSize = EditorGUILayout.IntSlider (new GUIContent ("Handle Size", "The size of the handles of the Node Inputs/Outputs"), knobSize, 12, 20);
 		nodeCanvas.zoom = EditorGUILayout.Slider (new GUIContent ("Zoom"), nodeCanvas.zoom, 0.6f, 2);
@@ -559,7 +559,7 @@ public class Node_Editor : EditorWindow
 								connectOutput = nodeInput.connection;
 								nodeInput.connection.connections.Remove (nodeInput);
 								nodeInput.connection = null;
-								RecalculateFrom (clickedNode);
+								//  RecalculateFrom (clickedNode);
 								e.Use();
 							}
 						}
@@ -690,34 +690,34 @@ public class Node_Editor : EditorWindow
 	// A list of Nodes from which calculation originates -> Call StartCalculation
 	public static List<Node> workList;
 
-	/// <summary>
-	/// Recalculate from every Input Node.
-	/// Usually does not need to be called at all, the smart calculation system is doing the job just fine
-	/// </summary>
-	public void RecalculateAll () 
-	{
-		workList = new List<Node> ();
-		for (int nodeCnt = 0; nodeCnt < nodeCanvas.nodes.Count; nodeCnt++) 
-		{
-			if (nodeCanvas.nodes [nodeCnt].Inputs.Count == 0) 
-			{ // Add all Inputs
-				ClearCalculation (nodeCanvas.nodes [nodeCnt]);
-				workList.Add (nodeCanvas.nodes [nodeCnt]);
-			}
-		}
-		StartCalculation ();
-	}
-
-	/// <summary>
-	/// Recalculate from this node. 
-	/// Usually does not need to be called manually
-	/// </summary>
-	public void RecalculateFrom (Node node) 
-	{
-		ClearCalculation (node);
-		workList = new List<Node> { node };
-		StartCalculation ();
-	}
+//  	/// <summary>
+//  	/// Recalculate from every Input Node.
+//  	/// Usually does not need to be called at all, the smart calculation system is doing the job just fine
+//  	/// </summary>
+//  	public void RecalculateAll () 
+//  	{
+//  		workList = new List<Node> ();
+//  		for (int nodeCnt = 0; nodeCnt < nodeCanvas.nodes.Count; nodeCnt++) 
+//  		{
+//  			if (nodeCanvas.nodes [nodeCnt].Inputs.Count == 0) 
+//  			{ // Add all Inputs
+//  				ClearCalculation (nodeCanvas.nodes [nodeCnt]);
+//  				workList.Add (nodeCanvas.nodes [nodeCnt]);
+//  			}
+//  		}
+//  		StartCalculation ();
+//  	}
+//  
+//  	/// <summary>
+//  	/// Recalculate from this node. 
+//  	/// Usually does not need to be called manually
+//  	/// </summary>
+//  	public void RecalculateFrom (Node node) 
+//  	{
+//  		ClearCalculation (node);
+//  		workList = new List<Node> { node };
+//  		StartCalculation ();
+//  	}
 
 	/// <summary>
 	/// Iterates through the worklist and calculates everything, including children
@@ -859,7 +859,7 @@ public class Node_Editor : EditorWindow
 		string[] folders = path.Split (new char[] {'/'}, StringSplitOptions.None);
 		openedCanvas = folders [folders.Length-1];
 		openedCanvasPath = path;
-		RecalculateAll ();
+		//  RecalculateAll ();
 
 		Repaint ();
 		AssetDatabase.Refresh ();

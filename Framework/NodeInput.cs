@@ -5,6 +5,7 @@ public class NodeInput : ScriptableObject
 	public Node body;
 	public NodeOutput connection;
 	public TypeOf type;
+	public bool hasResult = false;
 
 	public Rect rect = new Rect ();
 

@@ -24,6 +24,14 @@ public class NodeOutput : ScriptableObject
 		NodeBody.Outputs.Add (output);
 		return output;
 	}
+	
+	public void Notify()
+	{
+		foreach (var input in connections)
+		{
+			input.hasResult = true;
+		}
+	}
 
 	/// <summary>
 	/// Function to automatically draw and update the output with a label for it's name

@@ -34,13 +34,17 @@ public class InputNode : Node
 	public override void SideGUI()
 	{
 		value = EditorGUILayout.FloatField (new GUIContent ("Value", "The input value of type float"), value);
-		if (GUI.changed)
-			Node_Editor.editor.RecalculateFrom (this);
+		//  if (GUI.changed)
+		//  	Node_Editor.editor.RecalculateFrom (this);
 	}
 	
 	public override bool Calculate () 
 	{
-		Outputs [0].value = value;
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			//  Outputs [0].value = value;
+			Send(value, Outputs[0]);						
+		}
 		return true;
 	}
 }

@@ -33,15 +33,21 @@ public class DisplayNode : Node
 	
 	public override bool Calculate () 
 	{
-		if (!allInputsReady ()) 
-		{
-			value = 0;
-			assigned = false;
-			return false;
-		}
+//  		if (!allInputsReady ()) 
+//  		{
+//  			value = 0;
+//  			assigned = false;
+//  			return false;
+//  		}
+//  
+//  		value = (float)Inputs [0].connection.value;
+//  		assigned = true;
 
-		value = (float)Inputs [0].connection.value;
-		assigned = true;
+		if (Inputs[0].hasResult)
+		{
+			float v = (float)Receive(Inputs[0]);
+			Debug.Log("The received value was: " + v);
+		}
 
 		return true;
 	}

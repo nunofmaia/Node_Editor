@@ -58,6 +58,18 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	public abstract bool Calculate ();
 	
+	public object Receive(NodeInput input)
+	{
+		input.hasResult = false;
+		return input.connection.value;
+	}
+	
+	public void Send(object obj, NodeOutput output)
+	{
+		output.value = obj;
+		output.Notify();
+	}
+	
 	/// <summary>
 	/// Optional callback when the node is deleted
 	/// </summary>
@@ -72,8 +84,12 @@ public abstract class Node : ScriptableObject
 	{
 		for (int inCnt = 0; inCnt < Inputs.Count; inCnt++) 
 		{
-			if (Inputs [inCnt].connection == null || Inputs [inCnt].connection.value == null)
+			//  if (Inputs [inCnt].connection == null || Inputs [inCnt].connection.value == null)
+			//  	return false;
+			if (!Inputs[inCnt].hasResult)
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -127,7 +143,7 @@ public abstract class Node : ScriptableObject
 	/// </summary>
 	protected void InitBase () 
 	{
-		Calculate ();
+		//  Calculate ();
 		Node_Editor.nodeCanvas.nodes.Add (this);
 		if (!String.IsNullOrEmpty (AssetDatabase.GetAssetPath (Node_Editor.nodeCanvas)))
 		{
@@ -267,7 +283,7 @@ public abstract class Node : ScriptableObject
 			input.connection = output;
 			output.connections.Add (input);
 
-			Node_Editor.editor.RecalculateFrom (input.body);
+			//  Node_Editor.editor.RecalculateFrom (input.body);
 		}
 	}
 
