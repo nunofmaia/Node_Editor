@@ -28,7 +28,27 @@ public abstract class Node : ScriptableObject
 	/// <summary>
 	/// Function implemented by the children to draw the node
 	/// </summary>
-	public abstract void NodeGUI ();
+	public void NodeGUI ()
+	{
+		GUILayout.BeginHorizontal();
+		GUILayout.BeginVertical();
+		
+		foreach (var input in Inputs)
+		{
+			input.DisplayLayout();
+		}
+		
+		GUILayout.EndVertical();
+		GUILayout.BeginVertical();
+		
+		foreach (var output in Outputs)
+		{
+			output.DisplayLayout();
+		}
+		
+		GUILayout.EndVertical();
+		GUILayout.EndHorizontal();
+	}
 	
 	public virtual void SideGUI() { }
 	

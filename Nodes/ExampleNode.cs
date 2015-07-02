@@ -6,8 +6,8 @@ public class ExampleNode : Node
 	public const string ID = "exampleNode";
 	public override string GetID { get { return ID; } }
     
-    public const int width = 220;
-    public const int height = 100;
+    public const int width = 100;
+    public const int height = 50;
 	
 	public static ExampleNode Create (Vector2 position) 
 	{
@@ -17,23 +17,15 @@ public class ExampleNode : Node
 		node.rect = NodeRect;
 		node.name = "Example Node";
 		
-		NodeInput.Create (node, "Value", TypeOf.Float);
-		NodeOutput.Create (node, "Output val", TypeOf.Float);
+		NodeInput.Create (node, "in", TypeOf.Float);
+		NodeOutput.Create (node, "out", TypeOf.Float);
 		
 		node.InitBase ();
 		return node;
 	}
 	
-	public override void NodeGUI () 
+	public override void SideGUI()
 	{
-		GUILayout.Label ("This is a custom Node!");
-		
-		GUILayout.Label ("Input");
-		if (Event.current.type == EventType.Repaint)
-			Inputs [0].SetRect (GUILayoutUtility.GetLastRect ());
-			
-		if (Event.current.type == EventType.Repaint) 
-			Outputs [0].SetRect (GUILayoutUtility.GetLastRect ());
 		
 	}
 	

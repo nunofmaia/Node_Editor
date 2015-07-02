@@ -10,8 +10,8 @@ public class CalcNode : Node
 	public const string ID = "calcNode";
 	public override string GetID { get { return ID; } }
 	
-	public const int width = 200;
-	public const int height = 100;
+	public const int width = 100;
+	public const int height = 60;
 
 	public float Input1Val = 1f;
 	public float Input2Val = 1f;
@@ -23,47 +23,13 @@ public class CalcNode : Node
 		node.name = "Calc Node";
 		node.rect = NodeRect;
 		
-		NodeInput.Create (node, "Input 1", TypeOf.Float);
-		NodeInput.Create (node, "Input 2", TypeOf.Float);
+		NodeInput.Create (node, "x", TypeOf.Float);
+		NodeInput.Create (node, "y", TypeOf.Float);
 		
-		NodeOutput.Create (node, "Output 1", TypeOf.Float);
+		NodeOutput.Create (node, "out", TypeOf.Float);
 		
 		node.InitBase ();
 		return node;
-	}
-
-	public override void NodeGUI () 
-	{
-		GUILayout.BeginHorizontal ();
-		GUILayout.BeginVertical ();
-
-		if (Inputs [0].connection != null)
-			GUILayout.Label (Inputs [0].name);
-		else
-			Input1Val = EditorGUILayout.FloatField (Input1Val);
-		if (Event.current.type == EventType.Repaint) 
-			Inputs [0].SetRect (GUILayoutUtility.GetLastRect ());
-		// --
-		if (Inputs [1].connection != null)
-			GUILayout.Label (Inputs [1].name);
-		else
-			Input2Val = EditorGUILayout.FloatField (Input2Val);
-		if (Event.current.type == EventType.Repaint) 
-			Inputs [1].SetRect (GUILayoutUtility.GetLastRect ());
-
-		GUILayout.EndVertical ();
-		GUILayout.BeginVertical ();
-
-		Outputs [0].DisplayLayout ();
-		// We take that this time, because it has a GuiStyle to aligned to the right :)
-
-		GUILayout.EndVertical ();
-		GUILayout.EndHorizontal ();
-
-		type = (CalcType)EditorGUILayout.EnumPopup (new GUIContent ("Calculation Type", "The type of calculation performed on Input 1 and Input 2"), type);
-
-		if (GUI.changed)
-			Node_Editor.editor.RecalculateFrom (this);
 	}
 	
 	public override void SideGUI()

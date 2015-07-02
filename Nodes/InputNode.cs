@@ -7,7 +7,7 @@ public class InputNode : Node
 	public const string ID = "inputNode";
 	public override string GetID { get { return ID; } }
 	
-	public const int width = 220;
+	public const int width = 100;
 	public const int height = 50;
 
 	public float value = 1f;
@@ -20,21 +20,16 @@ public class InputNode : Node
 		node.name = "Input Node";
 		node.rect = NodeRect;
 		
-		NodeOutput.Create (node, "Value", TypeOf.Float);
+		NodeOutput.Create (node, "out", TypeOf.Float);
 		
 		node.InitBase ();
 		return node;
 	}
 
-	public override void NodeGUI () 
-	{
-		value = EditorGUILayout.FloatField (new GUIContent ("Value", "The input value of type float"), value);
-		if (Event.current.type == EventType.Repaint) 
-			Outputs [0].SetRect (GUILayoutUtility.GetLastRect ());
-
-		if (GUI.changed)
-			Node_Editor.editor.RecalculateFrom (this);
-	}
+	//  public override void NodeGUI () 
+	//  {
+	//  	Outputs [0].DisplayLayout ();
+	//  }
 	
 	public override void SideGUI()
 	{
