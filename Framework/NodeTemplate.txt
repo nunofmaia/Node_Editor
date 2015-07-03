@@ -1,0 +1,36 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class #SCRIPTNAME# : Node
+{
+    public const string ID = "#SCRIPTNAME#";
+    public override string GetID { get { return ID; } }
+
+    public const int width = 100;
+    public const int height = 50;
+
+    public static #SCRIPTNAME# Create(Vector2 position)
+    {
+        #SCRIPTNAME# node = CreateInstance<#SCRIPTNAME#>();
+        Rect NodeRect = new Rect(position.x, position.y, width, height);
+
+        node.rect = NodeRect;
+        node.name = "#SCRIPTNAME#";
+
+        NodeInput.Create(node, "in", TypeOf.Float);
+        NodeOutput.Create(node, "out", TypeOf.Float);
+
+        node.InitBase();
+        return node;
+    }
+
+    public override void SideGUI()
+    {
+
+    }
+
+    public override bool Calculate()
+    {
+        return false;
+    }
+}

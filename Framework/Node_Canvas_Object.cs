@@ -16,4 +16,12 @@ public class Node_Canvas_Object : ScriptableObject
 	public float zoom = 1; 
 	// Zoom Factors: 0.6f, 0.8f, 1.0f, 1.2f, 1.4f, 1.6f, 1.8f, 2.0f,
 	// Applied: 1 / zoom -> 2 Zoom In; 5 Zoom Out
+	
+	public void Start()
+	{
+		foreach (var node in nodes)
+		{
+			node.Start();
+		}
+	}
 }

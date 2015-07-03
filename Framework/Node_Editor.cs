@@ -7,7 +7,7 @@ using System.Linq;
 
 using Object = UnityEngine.Object;
 
-public enum TypeOf { Float, Texture2D, Channel }
+public enum TypeOf { Float, Texture2D, Channel, Struct }
 
 public struct TypeData 
 {
@@ -48,7 +48,7 @@ public class Node_Editor : EditorWindow
 	public static Node_Canvas_Object nodeCanvas;
 	public static Node_Editor editor;
 
-	public const string editorPath = "Assets/Plugins/Node_Editor/";
+	public const string editorPath = "Assets/Node_Editor/";
 	public static string openedCanvas = "New Canvas";
 	public static string openedCanvasPath;
 
@@ -106,7 +106,8 @@ public class Node_Editor : EditorWindow
 			{
 				{ TypeOf.Float, new TypeData (Color.cyan, InputKnob, OutputKnob) },
 				{ TypeOf.Texture2D, new TypeData (Color.magenta, InputKnob, OutputKnob) },
-				{ TypeOf.Channel, new TypeData (Color.yellow, InputKnob, OutputKnob) }
+				{ TypeOf.Channel, new TypeData (Color.yellow, InputKnob, OutputKnob) },
+				{ TypeOf.Struct, new TypeData (Color.green, InputKnob, OutputKnob) }
 			};
 			
 			nodeBase = new GUIStyle (GUI.skin.box);
