@@ -3,7 +3,6 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 
 using Object = UnityEngine.Object;
 
@@ -25,25 +24,7 @@ public struct TypeData
 
 public class Node_Editor : EditorWindow 
 {
-	public static class ReflectiveEnumerator
-    {
-        static ReflectiveEnumerator()
-        {
-        }
-
-        public static IEnumerable<Type> GetEnumerableOfType<T>(params object[] args) where T : class
-        {
-            List<Type> objects = new List<Type>();
-            foreach (Type type in
-                     Assembly.GetAssembly(typeof(T)).GetTypes()
-                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
-            {
-                objects.Add(type);
-            }
-
-            return objects;
-        }
-    }
+	
 	// Information about current instances
 	public static Node_Canvas_Object nodeCanvas;
 	public static Node_Editor editor;
@@ -822,6 +803,13 @@ public class Node_Editor : EditorWindow
 		{ // Add every node and every of it's inputs/outputs into the file. 
 			// Results in a big mess but there's no other way
 			Node node = nodeCanvas.nodes [nodeCnt];
+			if (node.Nodes.Count > 0)
+			{
+				foreach (var child in node.Nodes)
+				{
+					AssetDatabase.AddObjectToAsset(child, nodeCanvas);
+				}
+			}
 			AssetDatabase.AddObjectToAsset (node, nodeCanvas);
 			foreach (var input in node.Inputs)
 			{ 

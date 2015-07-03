@@ -21,7 +21,7 @@ public class NodeOutput : ScriptableObject
 		output.body = NodeBody;
 		output.type = OutputType;
 		output.name = OutputName;
-		NodeBody.Outputs.Add (output);
+		NodeBody.AddOutput (output);
 		return output;
 	}
 	

@@ -8,6 +8,7 @@ public abstract class Node : ScriptableObject
     public Rect rect = new Rect();
     public List<NodeInput> Inputs = new List<NodeInput>();
     public List<NodeOutput> Outputs = new List<NodeOutput>();
+    public List<Node> Nodes = new List<Node>();
     public bool calculated = true;
     // Abstract member to get the ID of the node
     public abstract string GetID { get; }
@@ -78,6 +79,21 @@ public abstract class Node : ScriptableObject
     public NodeOutput OutputPort(string name)
     {
         return Outputs.Find(o => o.name.Equals(name));
+    }
+    
+    public virtual void AddInput(NodeInput input)
+    {
+        Inputs.Add(input);
+    }
+    
+    public virtual void AddOutput(NodeOutput output)
+    {
+        Outputs.Add(output);
+    }
+    
+    public Node Clone()
+    {
+        return (Node)Instantiate(this);
     }
 
     public virtual void Start() { }
@@ -174,7 +190,7 @@ public abstract class Node : ScriptableObject
             AssetDatabase.Refresh();
         }
     }
-
+    
     /// <summary>
     /// Returns the input knob that is at the position on this node or null
     /// </summary>
