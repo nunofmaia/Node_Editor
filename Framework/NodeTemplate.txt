@@ -12,13 +12,12 @@ public class #SCRIPTNAME# : Node
     public static #SCRIPTNAME# Create(Vector2 position)
     {
         #SCRIPTNAME# node = CreateInstance<#SCRIPTNAME#>();
-        Rect NodeRect = new Rect(position.x, position.y, width, height);
 
-        node.rect = NodeRect;
+        node.rect = new Rect(position.x, position.y, width, height);
         node.name = "#SCRIPTNAME#";
 
-        NodeInput.Create(node, "in", TypeOf.Float);
-        NodeOutput.Create(node, "out", TypeOf.Float);
+        NodeInput.Create(node, "in", "Float");
+        NodeOutput.Create(node, "out", "Float");
 
         node.InitBase();
         return node;
