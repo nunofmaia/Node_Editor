@@ -10,6 +10,7 @@ public abstract class Node : ScriptableObject
     public List<NodeOutput> Outputs = new List<NodeOutput>();
     public List<Node> Nodes = new List<Node>();
     public bool calculated = true;
+    public bool locked = false;
     // Abstract member to get the ID of the node
     public abstract string GetID { get; }
 
@@ -101,7 +102,10 @@ public abstract class Node : ScriptableObject
         return (Node)Instantiate(this);
     }
 
-    public virtual void Start() { }
+    public void Start()
+    {
+        locked = false;
+    }
 
     /// <summary>
     /// Optional callback when the node is deleted

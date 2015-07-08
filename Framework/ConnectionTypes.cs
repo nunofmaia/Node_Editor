@@ -20,7 +20,8 @@ public static class ConnectionTypes
 			ITypeDeclaration typeDecl = assembly.CreateInstance (type.Name) as ITypeDeclaration;
 			Texture2D InputKnob = UnityEditor.AssetDatabase.LoadAssetAtPath (NodeEditor.editorPath + typeDecl.InputKnob_TexPath, typeof(Texture2D)) as Texture2D;
 			Texture2D OutputKnob = UnityEditor.AssetDatabase.LoadAssetAtPath (NodeEditor.editorPath + typeDecl.OutputKnob_TexPath, typeof(Texture2D)) as Texture2D;
-			types.Add (typeDecl.name, new TypeData (typeDecl.col, InputKnob, OutputKnob));
+			if (!types.ContainsKey(typeDecl.name))
+				types.Add (typeDecl.name, new TypeData (typeDecl.col, InputKnob, OutputKnob));
 		}
 
 		if (assembly != Assembly.GetCallingAssembly ())
@@ -31,7 +32,8 @@ public static class ConnectionTypes
 				ITypeDeclaration typeDecl = assembly.CreateInstance (type.Name) as ITypeDeclaration;
 				Texture2D InputKnob = UnityEditor.AssetDatabase.LoadAssetAtPath (NodeEditor.editorPath + typeDecl.InputKnob_TexPath, typeof(Texture2D)) as Texture2D;
 				Texture2D OutputKnob = UnityEditor.AssetDatabase.LoadAssetAtPath (NodeEditor.editorPath + typeDecl.OutputKnob_TexPath, typeof(Texture2D)) as Texture2D;
-				types.Add (typeDecl.name, new TypeData (typeDecl.col, InputKnob, OutputKnob));
+				if (!types.ContainsKey(typeDecl.name))
+					types.Add (typeDecl.name, new TypeData (typeDecl.col, InputKnob, OutputKnob));
 			}
 		}
 	}
