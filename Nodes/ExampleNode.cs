@@ -17,8 +17,8 @@ public class ExampleNode : Node
 		node.rect = NodeRect;
 		node.name = "Example Node";
 		
-		NodeInput.Create (node, "in", TypeOf.Float);
-		NodeOutput.Create (node, "out", TypeOf.Float);
+		NodeInput.Create (node, "in", "Float");
+		NodeOutput.Create (node, "out", "Float");
 		
 		node.InitBase ();
 		return node;

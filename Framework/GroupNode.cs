@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 
-public abstract class ComposedNode : Node
+public abstract class GroupNode : Node
 {
-    public Node_Canvas_Object canvas;
+    public NodeCanvas canvas;
 
     void CopyNodes(List<Node> nodes)
     {
@@ -28,13 +28,13 @@ public abstract class ComposedNode : Node
         {
             return;
         }
-		Node_Canvas_Object newNodeCanvas = null;
+		NodeCanvas newNodeCanvas = null;
 		
 		for (int cnt = 0; cnt < objects.Length; cnt++) 
 		{ // We only have to search for the Node Canvas itself in the mess, because it still hold references to all of it's nodes and their connections
 			object obj = objects [cnt];
-			if (obj.GetType () == typeof (Node_Canvas_Object)) 
-				newNodeCanvas = obj as Node_Canvas_Object;
+			if (obj.GetType () == typeof (NodeCanvas)) 
+				newNodeCanvas = obj as NodeCanvas;
 		}
 		if (newNodeCanvas == null)
         {

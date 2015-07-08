@@ -4,7 +4,7 @@ public class NodeInput : ScriptableObject
 {
 	public Node body;
 	public NodeOutput connection;
-	public TypeOf type;
+	public string type;
 	public bool hasResult = false;
 
 	public Rect rect = new Rect ();
@@ -12,7 +12,7 @@ public class NodeInput : ScriptableObject
 	/// <summary>
 	/// Creates a new NodeInput in NodeBody of specified type
 	/// </summary>
-	public static NodeInput Create (Node NodeBody, string InputName, TypeOf InputType) 
+	public static NodeInput Create (Node NodeBody, string InputName, string InputType) 
 	{
 		NodeInput input = CreateInstance <NodeInput> ();
 		input.body = NodeBody;
@@ -57,8 +57,8 @@ public class NodeInput : ScriptableObject
 	public Rect GetGUIKnob () 
 	{
 		Rect knobRect = new Rect (rect);
-		knobRect.position += Node_Editor.zoomPanAdjust;
-		float knobSize = (float)Node_Editor.knobSize;
+		knobRect.position += NodeEditor.zoomPanAdjust;
+		float knobSize = (float)NodeEditor.knobSize;
 		return new Rect (knobRect.x - knobSize,
 		                 knobRect.y + (knobRect.height - knobSize) / 2,
 		                 knobSize, knobSize);
@@ -70,7 +70,7 @@ public class NodeInput : ScriptableObject
 	public Rect GetScreenKnob () 
 	{
 		Rect knobRect = GetGUIKnob ();
-		knobRect.position = knobRect.position - Node_Editor.zoomPanAdjust + Node_Editor.zoomPos; // Change spaces, as GUIKnob was built for scaled GUI.matrix.
-		return Node_Editor.ScaleRect (knobRect, Node_Editor.zoomPos, new Vector2 (1/Node_Editor.nodeCanvas.zoom, 1/Node_Editor.nodeCanvas.zoom));
+		knobRect.position = knobRect.position - NodeEditor.zoomPanAdjust + NodeEditor.zoomPos; // Change spaces, as GUIKnob was built for scaled GUI.matrix.
+		return NodeEditor.ScaleRect (knobRect, NodeEditor.zoomPos, new Vector2 (1/NodeEditor.nodeCanvas.zoom, 1/NodeEditor.nodeCanvas.zoom));
 	}
 }

@@ -20,7 +20,7 @@ public class InputNode : Node
 		node.name = "Input Node";
 		node.rect = NodeRect;
 		
-		NodeOutput.Create (node, "out", TypeOf.Float);
+		NodeOutput.Create (node, "out", "Float");
 		
 		node.InitBase ();
 		return node;

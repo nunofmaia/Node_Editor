@@ -20,7 +20,7 @@ public class DisplayNode : Node
 		node.name = "Display Node";
 		node.rect = NodeRect;
 		
-		NodeInput.Create (node, "in", TypeOf.Float);
+		NodeInput.Create (node, "in", "Float");
 		
 		node.InitBase ();
 		return node;

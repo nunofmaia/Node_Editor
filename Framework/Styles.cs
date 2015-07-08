@@ -11,7 +11,7 @@ public static class Styles
 		style.padding = new RectOffset(10, 10, 0, 0);
 		style.fontStyle = FontStyle.Bold;
 		style.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
-		style.normal.background = Node_Editor.ColorToTex(new Color(0.98f, 0.98f, 0.98f));
+		style.normal.background = NodeEditor.ColorToTex(new Color(0.98f, 0.98f, 0.98f));
 		
 		return style;
 	}
@@ -20,7 +20,7 @@ public static class Styles
 	{
 		GUIStyle style = new GUIStyle();
 		
-		style.normal.background = Node_Editor.ColorToTex(Color.white);
+		style.normal.background = NodeEditor.ColorToTex(Color.white);
 		//  style.padding = new RectOffset(15, 15, 0, 0);
 		
 		return style;

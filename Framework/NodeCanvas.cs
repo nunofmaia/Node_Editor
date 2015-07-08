@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Node_Canvas_Object : ScriptableObject 
+public class NodeCanvas : ScriptableObject 
 { // All necessary things to save placed in the Node Canvas Scriptable Object
 
 	// every node on the canvas

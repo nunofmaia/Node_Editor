@@ -23,10 +23,10 @@ public class CalcNode : Node
         node.name = "Calc Node";
         node.rect = NodeRect;
 
-        NodeInput.Create(node, "x", TypeOf.Float);
-        NodeInput.Create(node, "y", TypeOf.Float);
+        NodeInput.Create(node, "x", "Float");
+        NodeInput.Create(node, "y", "Float");
 
-        NodeOutput.Create(node, "out", TypeOf.Float);
+        NodeOutput.Create(node, "out", "Float");
 
         node.InitBase();
         return node;

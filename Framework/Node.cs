@@ -21,8 +21,8 @@ public abstract class Node : ScriptableObject
         get
         {
             Rect nodeRect = new Rect(rect);
-            nodeRect.position += Node_Editor.zoomPos;
-            return Node_Editor.ScaleRect(nodeRect, Node_Editor.zoomPos, new Vector2(1 / Node_Editor.nodeCanvas.zoom, 1 / Node_Editor.nodeCanvas.zoom));
+            nodeRect.position += NodeEditor.zoomPos;
+            return NodeEditor.ScaleRect(nodeRect, NodeEditor.zoomPos, new Vector2(1 / NodeEditor.nodeCanvas.zoom, 1 / NodeEditor.nodeCanvas.zoom));
         }
     }
 
@@ -172,10 +172,10 @@ public abstract class Node : ScriptableObject
     protected void InitBase()
     {
         //  Calculate ();
-        Node_Editor.nodeCanvas.nodes.Add(this);
-        if (!String.IsNullOrEmpty(AssetDatabase.GetAssetPath(Node_Editor.nodeCanvas)))
+        NodeEditor.nodeCanvas.nodes.Add(this);
+        if (!String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.nodeCanvas)))
         {
-            AssetDatabase.AddObjectToAsset(this, Node_Editor.nodeCanvas);
+            AssetDatabase.AddObjectToAsset(this, NodeEditor.nodeCanvas);
             foreach (var input in Inputs)
             {
                 AssetDatabase.AddObjectToAsset(input, this);
@@ -186,7 +186,7 @@ public abstract class Node : ScriptableObject
                 AssetDatabase.AddObjectToAsset(output, this);
             }
 
-            AssetDatabase.ImportAsset(Node_Editor.openedCanvasPath);
+            AssetDatabase.ImportAsset(NodeEditor.openedCanvasPath);
             AssetDatabase.Refresh();
         }
     }
@@ -223,11 +223,11 @@ public abstract class Node : ScriptableObject
     {
         foreach (var output in Outputs)
         {
-            GUI.DrawTexture(output.GetGUIKnob(), Node_Editor.typeData[output.type].OutputKnob);
+            GUI.DrawTexture(output.GetGUIKnob(), ConnectionTypes.types[output.type].OutputKnob);
         }
         foreach (var input in Inputs)
         {
-            GUI.DrawTexture(input.GetGUIKnob(), Node_Editor.typeData[input.type].InputKnob);
+            GUI.DrawTexture(input.GetGUIKnob(), ConnectionTypes.types[input.type].InputKnob);
         }
     }
     /// <summary>
@@ -239,9 +239,9 @@ public abstract class Node : ScriptableObject
         {
             for (int conCnt = 0; conCnt < output.connections.Count; conCnt++)
             {
-                Node_Editor.DrawNodeCurve(output.GetGUIKnob().center,
+                NodeEditor.DrawNodeCurve(output.GetGUIKnob().center,
                                            output.connections[conCnt].GetGUIKnob().center,
-                                           Node_Editor.typeData[output.type].col);
+                                           ConnectionTypes.types[output.type].col);
             }
         }
     }
@@ -251,7 +251,7 @@ public abstract class Node : ScriptableObject
     /// </summary>
     public void Delete()
     {
-        Node_Editor.nodeCanvas.nodes.Remove(this);
+        NodeEditor.nodeCanvas.nodes.Remove(this);
         foreach (var output in Outputs)
         {
             for (int conCnt = 0; conCnt < output.connections.Count; conCnt++)
@@ -265,9 +265,9 @@ public abstract class Node : ScriptableObject
 
         DestroyImmediate(this, true);
 
-        if (!String.IsNullOrEmpty(Node_Editor.openedCanvasPath))
+        if (!String.IsNullOrEmpty(NodeEditor.openedCanvasPath))
         {
-            AssetDatabase.ImportAsset(Node_Editor.openedCanvasPath);
+            AssetDatabase.ImportAsset(NodeEditor.openedCanvasPath);
             AssetDatabase.Refresh();
         }
         OnDelete();
@@ -293,7 +293,7 @@ public abstract class Node : ScriptableObject
 
         if (output.body.isChildOf(input.body))
         {
-            Node_Editor.editor.ShowNotification(new GUIContent("Recursion detected!"));
+            NodeEditor.editor.ShowNotification(new GUIContent("Recursion detected!"));
             return false;
         }
         return true;

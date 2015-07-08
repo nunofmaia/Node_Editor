@@ -8,26 +8,26 @@ using Object = UnityEngine.Object;
 
 public enum TypeOf { Float, Texture2D, Channel, Struct }
 
-public struct TypeData 
-{
-	public Color col;
-	public Texture2D InputKnob;
-	public Texture2D OutputKnob;
+//  public struct TypeData 
+//  {
+//  	public Color col;
+//  	public Texture2D InputKnob;
+//  	public Texture2D OutputKnob;
+//  
+//  	public TypeData (Color color, Texture2D inKnob, Texture2D outKnob) 
+//  	{
+//  		col = color;
+//  		InputKnob = NodeEditor.Tint (inKnob, color);
+//  		OutputKnob = NodeEditor.Tint (outKnob, color);
+//  	}
+//  }
 
-	public TypeData (Color color, Texture2D inKnob, Texture2D outKnob) 
-	{
-		col = color;
-		InputKnob = Node_Editor.Tint (inKnob, color);
-		OutputKnob = Node_Editor.Tint (outKnob, color);
-	}
-}
-
-public class Node_Editor : EditorWindow 
+public class NodeEditor : EditorWindow 
 {
 	
 	// Information about current instances
-	public static Node_Canvas_Object nodeCanvas;
-	public static Node_Editor editor;
+	public static NodeCanvas nodeCanvas;
+	public static NodeEditor editor;
 
 	public const string editorPath = "Assets/Node_Editor/";
 	public static string openedCanvas = "New Canvas";
@@ -50,7 +50,6 @@ public class Node_Editor : EditorWindow
 	// Static textures and styles
 	public static Texture2D InputKnob;
 	public static Texture2D OutputKnob;
-	public static Texture2D ConnectorKnob;
 	public static Texture2D Background;
 	public static GUIStyle nodeBase;
 	public static GUIStyle nodeBox;
@@ -66,8 +65,8 @@ public class Node_Editor : EditorWindow
 	[MenuItem("Window/Node Editor")]
 	static void CreateEditor () 
 	{
-		Node_Editor.editor = EditorWindow.GetWindow<Node_Editor> ();
-		Node_Editor.editor.minSize = new Vector2 (800, 600);
+		NodeEditor.editor = EditorWindow.GetWindow<NodeEditor> ();
+		NodeEditor.editor.minSize = new Vector2 (800, 600);
 	}
 
 	private bool initiated;
@@ -79,17 +78,9 @@ public class Node_Editor : EditorWindow
 			InputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/handle.png", typeof(Texture2D)) as Texture2D;
 			OutputKnob = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/handle.png", typeof(Texture2D)) as Texture2D;
 			
-			ConnectorKnob = EditorGUIUtility.Load ("icons/animationkeyframe.png") as Texture2D;
 			Background = AssetDatabase.LoadAssetAtPath (editorPath + "Textures/background.png", typeof(Texture2D)) as Texture2D;
-
-			// TODO: Node Editor: Type Declaration
-			typeData = new Dictionary<TypeOf, TypeData> () 
-			{
-				{ TypeOf.Float, new TypeData (Color.cyan, InputKnob, OutputKnob) },
-				{ TypeOf.Texture2D, new TypeData (Color.magenta, InputKnob, OutputKnob) },
-				{ TypeOf.Channel, new TypeData (Color.yellow, InputKnob, OutputKnob) },
-				{ TypeOf.Struct, new TypeData (Color.green, InputKnob, OutputKnob) }
-			};
+			
+			ConnectionTypes.FetchTypes();
 			
 			nodeBase = new GUIStyle (GUI.skin.box);
 			nodeBase.normal.background = ColorToTex (new Color (0.2f, 0.2f, 0.2f));
@@ -104,11 +95,6 @@ public class Node_Editor : EditorWindow
 			nodeLabelBold.wordWrap = false;
 			
 			NewNodeCanvas ();
-			
-			// Example of creating Nodes and Connections through code
-//			CalcNode calcNode1 = CalcNode.Create (new Rect (200, 200, 200, 100));
-//			CalcNode calcNode2 = CalcNode.Create (new Rect (600, 200, 200, 100));
-//			Node.ApplyConnection (calcNode1.Outputs [0], calcNode2.Inputs [0]);
 			
 			initiated = true;
 		}
@@ -187,7 +173,7 @@ public class Node_Editor : EditorWindow
 		}
 		if (connectOutput != null)
 		{ // Draw the currently drawn connection
-			DrawNodeCurve (connectOutput.GetGUIKnob ().center, mousePos*nodeCanvas.zoom, typeData [connectOutput.type].col);
+			DrawNodeCurve (connectOutput.GetGUIKnob ().center, mousePos*nodeCanvas.zoom, ConnectionTypes.types [connectOutput.type].col);
 			Repaint ();
 		}
 
@@ -836,13 +822,13 @@ public class Node_Editor : EditorWindow
 		Object[] objects = AssetDatabase.LoadAllAssetsAtPath (path);
 		if (objects.Length == 0) 
 			return;
-		Node_Canvas_Object newNodeCanvas = null;
+		NodeCanvas newNodeCanvas = null;
 		
 		for (int cnt = 0; cnt < objects.Length; cnt++) 
 		{ // We only have to search for the Node Canvas itself in the mess, because it still hold references to all of it's nodes and their connections
 			object obj = objects [cnt];
-			if (obj.GetType () == typeof (Node_Canvas_Object)) 
-				newNodeCanvas = obj as Node_Canvas_Object;
+			if (obj.GetType () == typeof (NodeCanvas)) 
+				newNodeCanvas = obj as NodeCanvas;
 		}
 		if (newNodeCanvas == null)
 			return;
@@ -862,7 +848,7 @@ public class Node_Editor : EditorWindow
 	/// </summary>
 	public void NewNodeCanvas () 
 	{
-		nodeCanvas = CreateInstance<Node_Canvas_Object> ();
+		nodeCanvas = CreateInstance<NodeCanvas> ();
 		nodeCanvas.nodes = new List<Node> ();
 		openedCanvas = "New Canvas";
 		openedCanvasPath = "";
