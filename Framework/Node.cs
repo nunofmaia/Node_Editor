@@ -61,14 +61,19 @@ public abstract class Node : ScriptableObject
 
     public object Receive(NodeInput input)
     {
+        var val = input.connection.value;
         input.hasResult = false;
-        return input.connection.value;
+        input.connection.value = null;
+        return val;
     }
 
     public void Send(object obj, NodeOutput output)
     {
-        output.value = obj;
-        output.Notify();
+        if (output.value == null)
+        {
+            output.value = obj;
+            output.Notify();
+        }
     }
 
     public NodeInput InputPort(string name)
